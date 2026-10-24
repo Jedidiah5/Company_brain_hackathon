@@ -52,3 +52,11 @@ Search and filter signals, inspect evidence and all three scores, edit and copy 
 Run `npm test` and `npm run build` before merging. Node.js 22.18+ or 24 is recommended. See [TEAM-TASKS.md](TEAM-TASKS.md) for ownership, setup and remaining pipeline work.
 
 Shared cross-browser ownership is not implemented in this version. The earlier shared-board pitch describes the intended integration, not the current local storage behavior.
+
+## LinkedIn search
+
+The inbox now has a **Search LinkedIn** form. It searches public posts from the last month through treg, scores up to ten against the company profile using `gpt-5-mini`, and adds validated results to the queue. It verifies exact quote evidence, score ranges and draft eligibility. Existing rows and claims survive repeat searches; sample rows are removed when real results arrive.
+
+For local use, run `treg login` and set `OPENAI_API_KEY` in `.env`. No provider key is required. The route runs the signed-in treg CLI without exposing credentials. For Vercel, configure a team-scoped `TREG_TOKEN` and `OPENAI_API_KEY` in server environment settings; a personal treg token also needs `TREG_ORG`. The local CLI login does not transfer to a deployment.
+
+A search is listed at $0.004 through HarvestAPI; the returned actual charge is shown separately from OpenAI scoring. Search failures preserve the current dataset. Results from the UI persist on this device, refresh with the latest file and are included in JSON export. The Python CLI remains the Reddit/HN pipeline.

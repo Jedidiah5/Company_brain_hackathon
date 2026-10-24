@@ -45,7 +45,11 @@ than a short one.
 
 ## Out of scope today
 
-Auto-sending, scraping LinkedIn, finding personal email addresses. They are roadmap lines in the Loom.
+Auto-sending and finding personal email addresses remain out of scope.
+
+## LinkedIn scope update
+
+The user explicitly requested LinkedIn support after the initial build. The Next.js app now searches public LinkedIn posts through treg (`harvestapi.linkedin.post.search`), scores up to ten with `gpt-5-mini`, and keeps the original lead schema. No browser scraping, cookies, personal enrichment or auto-sending. Local development uses `treg login`; hosted deployments require server-side `TREG_TOKEN` (and `TREG_ORG` for a personal token). LinkedIn results persist on this device and can be exported; the Python CLI still gathers Reddit and HN.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
