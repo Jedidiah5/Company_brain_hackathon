@@ -1,0 +1,24 @@
+subreddit: r/RecruitmentAgencies
+url: https://www.reddit.com/r/RecruitmentAgencies/comments/1vbocdx/best_candidate_screening_software_for_handling_a/
+title: Best candidate screening software for handling a flood of applicants?
+text: We opened one role and got over a thousands applicants in a few days. Wayy too many to be read by hand and the basic screening questins still left me with hundreds that technically pass. Im looking for candidate screening software that can actually do bulk analysis, parse and rank resume against the role with solid whys and why nots- for people who have dealt with similar volume what candidate screening software actually held up and did it just do keyword matching or actually rank a genuine fit. Need something practical not another ats tool with gpt wrapper
+
+---
+
+subreddit: r/startups
+url: https://www.reddit.com/r/startups/comments/1n92qk9/how_do_i_hire_the_best_first_hires_for_my_startup/
+title: How do I hire the best first hires for my startup?
+text: I'm a solo-founder with a bootstrapped post-revenue startup. I've built the full product, marketed it, and generated revenue myself.
+Our main stack includes: typescript, NextJS, React, Tailwind over Vercel. While the product is already mature, I would like to hire some developers to take the development burden off me so I can concentrate more on getting clients and increasing our revenue. Hiring for startups is new to me, so I had some questions (maybe newbish, but pls help a fellow redditor):
+What should I look for in an ideal candidate? I don't want someone to just work for the paycheck. Of course, I'm willing to include equity upside as well, but I feel that the risk of having a wrong hire at this stage will be catastrophic.
+I feel I'm moving at a rapid velocity alone, but that's not sustainable in the long run. How can I ensure that hiring someone increases velocity as opposed to adding friction and grinding us to a halt?
+What timelines can I expect for joining if I start hiring now? I think it'll be approx 3 months but correct me if it can be done earlier.
+I would ideally want someone with 2-5 years of experience in the above stack. What kind of equity structure is good? How much vesting period/cliff is ideal?
+I will not promote!
+
+---
+
+subreddit: r/Recruitment
+url: https://www.reddit.com/r/Recruitment/comments/1wv2svb/alternatives-to-indeed/
+title: Alternatives to Indeed
+text: Hello! What have you found are reliable alternatives to Indeed, especially for blue collar, trades, etc.
