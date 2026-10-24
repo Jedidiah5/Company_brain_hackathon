@@ -57,7 +57,7 @@
     },
     {
       "id": "sample_02",
-      "source": "hn",
+      "source": "hackernews",
       "source_url": "",
       "fetched_at": "2026-10-24T12:00:00Z",
       "posted_at": "2026-10-24T10:00:00Z",
@@ -141,7 +141,7 @@
     },
     {
       "id": "sample_05",
-      "source": "hn",
+      "source": "hackernews",
       "source_url": "",
       "fetched_at": "2026-10-24T12:00:00Z",
       "posted_at": "2026-10-24T10:00:00Z",

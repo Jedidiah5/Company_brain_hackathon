@@ -50,3 +50,15 @@ Own demo/docs and UI feedback.
 - Claims use `claim: { claimed_by, status, notes }` and stable IDs in localStorage. Source records are not overwritten; export includes your local changes.
 - Leads remain local and gitignored. Teammates need to generate or privately transfer a real dataset. The checked-in fixture is illustrative only.
 - Running the UI requires no OpenAI calls. There is no auto-send endpoint and no browser API key.
+
+## LinkedIn update
+
+LinkedIn support has been added at the user's request. Use the inbox search form; no browser scraping or LinkedIn login is needed. Locally, sign in with `treg login`; hosted builds need server-side `TREG_TOKEN`, optional `TREG_ORG`, and `OPENAI_API_KEY`. API keys must never use the `NEXT_PUBLIC_` prefix.
+
+QA: search a short, specific hiring pain; confirm LinkedIn source filtering, exact source quotes, preserved prior leads, duplicate suppression, and local persistence after refresh. Test an empty search and a failed provider/scoring response. Do not relax scores to inflate the count. The Node route adds LinkedIn; the Python source helper is unchanged.
+
+## Full demo journey update
+
+Website onboarding is now connected to `/api/company`. The returned company brain and generated queries drive `/api/linkedin`. The inbox supports source-post review, opening an author profile in a new tab, manually confirming a connection request, and saving the lead in **My prospects**. State persists in a versioned local session. The lead record keys remain unchanged; connection/prospect metadata is stored separately.
+
+Rehearse [DEMO.md](DEMO.md). Test a brand-new session, a live website, a search, original post/profile links, returning to the app, confirming connection status, saving a prospect, editing notes and reloading. No actual connection request should be sent just for testing. The app does not verify LinkedIn connection state.
