@@ -3,3 +3,9 @@
 leads.json
 __pycache__/
 .venv/
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.env.*
+!.env.example

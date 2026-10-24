@@ -1,0 +1,171 @@
+{
+  "demo": true,
+  "generated_at": "2026-10-24T12:00:00Z",
+  "company_input": "https://jumpstart-uk.com",
+  "profile": {
+    "sells": "Jumpstart places early-career sales, marketing, operations and chief-of-staff talent into UK startups.",
+    "icp": "UK startup founders and hiring managers building their commercial teams.",
+    "pains": [
+      "Making a first commercial hire without a recruiting team",
+      "Finding early-career talent who can grow with the business",
+      "Spending founder time screening unsuitable candidates"
+    ],
+    "tone": "Direct, practical, friendly.",
+    "disqualify": [
+      "Recruiters and vendors selling the same service",
+      "Candidates seeking employment",
+      "Companies outside the UK target market"
+    ]
+  },
+  "queries": [
+    "first sales hire London",
+    "UK startup operations hire"
+  ],
+  "counts": {
+    "fetched": 5,
+    "kept": 3,
+    "dropped": 2
+  },
+  "leads": [
+    {
+      "id": "sample_01",
+      "source": "reddit",
+      "source_url": "",
+      "fetched_at": "2026-10-24T12:00:00Z",
+      "posted_at": "2026-10-24T10:00:00Z",
+      "author_handle": "sample_founder",
+      "author_profile_url": "",
+      "context": "r/startups",
+      "title": "How do you hire your first sales person?",
+      "quote": "We need our first sales hire in London this quarter, but I have no idea where to find junior talent.",
+      "body_excerpt": "We need our first sales hire in London this quarter, but I have no idea where to find junior talent.",
+      "scores": {
+        "intent": 8,
+        "fit": 9,
+        "urgency": 8,
+        "total": 25
+      },
+      "reasoning": "Illustrative score for UI demonstration; this is not a real prospect.",
+      "disqualified": false,
+      "disqualified_reason": "",
+      "draft_reply": "You mentioned \"We need our first sales hire in London this quarter, but I have no idea where to find junior talent.\" Jumpstart helps UK startups find early-career commercial talent. What would a successful first three months look like for this hire?",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sample_02",
+      "source": "hn",
+      "source_url": "",
+      "fetched_at": "2026-10-24T12:00:00Z",
+      "posted_at": "2026-10-24T10:00:00Z",
+      "author_handle": "sample_founder",
+      "author_profile_url": "",
+      "context": "Ask HN",
+      "title": "What worked for your first commercial hire?",
+      "quote": "We are thinking about building a commercial team next year and comparing the options.",
+      "body_excerpt": "We are thinking about building a commercial team next year and comparing the options.",
+      "scores": {
+        "intent": 4,
+        "fit": 6,
+        "urgency": 2,
+        "total": 12
+      },
+      "reasoning": "Illustrative score for UI demonstration; this is not a real prospect.",
+      "disqualified": false,
+      "disqualified_reason": "",
+      "draft_reply": "",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sample_03",
+      "source": "reddit",
+      "source_url": "",
+      "fetched_at": "2026-10-24T12:00:00Z",
+      "posted_at": "2026-10-24T10:00:00Z",
+      "author_handle": "sample_founder",
+      "author_profile_url": "",
+      "context": "r/Entrepreneur",
+      "title": "Founder spending too long screening applications",
+      "quote": "I spend every Friday reading applications for our UK operations role instead of talking to customers.",
+      "body_excerpt": "I spend every Friday reading applications for our UK operations role instead of talking to customers.",
+      "scores": {
+        "intent": 6,
+        "fit": 8,
+        "urgency": 7,
+        "total": 21
+      },
+      "reasoning": "Illustrative score for UI demonstration; this is not a real prospect.",
+      "disqualified": false,
+      "disqualified_reason": "",
+      "draft_reply": "You mentioned \"I spend every Friday reading applications for our UK operations role instead of talking to customers.\" Jumpstart helps UK startups find early-career commercial talent. What would a successful first three months look like for this hire?",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sample_04",
+      "source": "reddit",
+      "source_url": "",
+      "fetched_at": "2026-10-24T12:00:00Z",
+      "posted_at": "2026-10-24T10:00:00Z",
+      "author_handle": "sample_account",
+      "author_profile_url": "",
+      "context": "r/jobs",
+      "title": "Looking for my first marketing job",
+      "quote": "I am looking for a junior marketing job in London.",
+      "body_excerpt": "I am looking for a junior marketing job in London.",
+      "scores": {
+        "intent": 3,
+        "fit": 2,
+        "urgency": 6,
+        "total": 11
+      },
+      "reasoning": "Illustrative score for UI demonstration; this is not a real prospect.",
+      "disqualified": true,
+      "disqualified_reason": "Job seeker; not a buyer.",
+      "draft_reply": "",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sample_05",
+      "source": "hn",
+      "source_url": "",
+      "fetched_at": "2026-10-24T12:00:00Z",
+      "posted_at": "2026-10-24T10:00:00Z",
+      "author_handle": "sample_account",
+      "author_profile_url": "",
+      "context": "Show HN",
+      "title": "My new recruiting service",
+      "quote": "I help founders find their first sales hire with my recruitment agency.",
+      "body_excerpt": "I help founders find their first sales hire with my recruitment agency.",
+      "scores": {
+        "intent": 2,
+        "fit": 4,
+        "urgency": 2,
+        "total": 8
+      },
+      "reasoning": "Illustrative score for UI demonstration; this is not a real prospect.",
+      "disqualified": true,
+      "disqualified_reason": "Vendor selling a competing service.",
+      "draft_reply": "",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    }
+  ]
+}
