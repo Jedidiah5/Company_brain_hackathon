@@ -173,14 +173,32 @@ def read_github_repo(slug, limit=12000):
         except Exception:  # noqa: BLE001
             pass
 
+    import base64
+
     readme_raw = run_cmd(["gh", "api", f"repos/{slug}/readme", "--jq", ".content"])
     if readme_raw and readme_raw.strip():
-        import base64
         try:
             text = base64.b64decode(readme_raw.strip()).decode("utf-8", "replace")
             parts.append("--- README\n" + text[:8000])
         except Exception:  # noqa: BLE001
             pass
+
+    # A README is not the only place product prose lives. Pull the other usual
+    # suspects from the repo root, which is how a workspace repo describes itself.
+    listing = run_cmd(["gh", "api", f"repos/{slug}/contents", "--jq", ".[].name"])
+    if listing:
+        present = {n.strip() for n in listing.splitlines() if n.strip()}
+        extras = [n for n in ("CANON.md", "CLAUDE.md", "PRODUCT.md", "STATUS.md", "AGENTS.md")
+                  if n in present]
+        for name in extras[:3]:
+            raw = run_cmd(["gh", "api", f"repos/{slug}/contents/{name}", "--jq", ".content"])
+            if not raw or not raw.strip():
+                continue
+            try:
+                text = base64.b64decode(raw.strip()).decode("utf-8", "replace")
+                parts.append(f"--- {name}\n" + text[:5000])
+            except Exception:  # noqa: BLE001
+                continue
 
     if not parts:  # no gh, or not authorised: try the public raw files
         for branch in ("main", "master"):
