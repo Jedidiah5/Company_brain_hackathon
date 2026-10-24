@@ -16,7 +16,7 @@ export default function SignalMap({leads, selected, onSelect}: {leads:Lead[]; se
     renderer.domElement.setAttribute('aria-hidden','true'); el.appendChild(renderer.domElement);
     const group=new THREE.Group(); scene.add(group);
     const resources: (THREE.BufferGeometry|THREE.Material)[]=[];
-    const ringMaterial=new THREE.LineBasicMaterial({color:0x344238,transparent:true,opacity:.65}); resources.push(ringMaterial);
+    const ringMaterial=new THREE.LineBasicMaterial({color:0x4a7a58,transparent:true,opacity:.55}); resources.push(ringMaterial);
     [1.25,2.3,3.4].forEach(r=>{const geo=new THREE.BufferGeometry().setFromPoints(Array.from({length:129},(_,i)=>new THREE.Vector3(Math.cos(i/128*Math.PI*2)*r,Math.sin(i/128*Math.PI*2)*r,0)));resources.push(geo);group.add(new THREE.LineLoop(geo,ringMaterial));});
     const coreGeo=new THREE.IcosahedronGeometry(.24,1); const coreMat=new THREE.MeshBasicMaterial({color:0xd2ff86,wireframe:true});resources.push(coreGeo,coreMat);group.add(new THREE.Mesh(coreGeo,coreMat));
     const nodes:THREE.Mesh[]=[];

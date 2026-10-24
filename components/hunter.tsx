@@ -1,12 +1,13 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { ArrowUpRight, Radar, Layers3, BrainCircuit, Settings2, Search, RefreshCw, ChevronRight, Check, Copy, ExternalLink, X, FileDown, Crosshair, CircleHelp, Globe, UserPlus, ArrowRight, Bookmark, ArrowLeft } from 'lucide-react';
+import { ArrowUpRight, Radar, Layers3, BrainCircuit, Settings2, Search, RefreshCw, ChevronRight, Check, Copy, ExternalLink, X, FileDown, Crosshair, CircleHelp, Globe, UserPlus, ArrowRight, Bookmark, ArrowLeft, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { actionable, rank, safeUrl, mergeLinkedIn } from '@/lib/leads';
 import { newSession, readSession, saveProspect, confirmConnection } from '@/lib/session';
 import { statuses, type Claim, type ConnectionStatus, type Dataset, type Lead, type Session, type Workspace } from '@/lib/types';
 const SignalMap = dynamic(() => import('./signal-map'), { ssr: false, loading: () => <div className="map-canvas" /> });
 const STORAGE = 'signal-hunter.session.v2';
+const SIDEBAR_STORAGE = 'signal-hunter.sidebar.v1';
 const EMPTY_WORKSPACE: Workspace = { claims: {}, drafts: {}, operator: '' };
 type View = 'start' | 'queue' | 'brain' | 'prospects';
 type Filter = 'all' | 'actionable' | 'claimed' | 'dropped';
@@ -20,6 +21,7 @@ export default function Hunter() {
   const [customSearch, setCustomSearch] = useState(false), [customQuery, setCustomQuery] = useState('');
   const [source, setSource] = useState('all'), [query, setQuery] = useState(''), [sort, setSort] = useState('intent');
   const [selected, setSelected] = useState(''), [notice, setNotice] = useState(''), [settings, setSettings] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const data = session?.dataset;
   const workspace = session?.workspace || EMPTY_WORKSPACE;
   const leads = useMemo(() => data?.leads || [], [data]);
@@ -27,11 +29,16 @@ export default function Hunter() {
   const savedCount = Object.keys(session?.prospects || {}).length;
   function setWorkspace(update: (previous: Workspace) => Workspace) { setSession(s => s ? { ...s, workspace: update(s.workspace) } : s); }
   useEffect(() => {
-    try { const saved = readSession(localStorage.getItem(STORAGE)); if (saved) { setSession(saved); setWebsite(saved.dataset.company_input); setView('queue'); if (saved.pending) setSelected(saved.pending); } }
+    try {
+      const saved = readSession(localStorage.getItem(STORAGE));
+      if (saved) { setSession(saved); setWebsite(saved.dataset.company_input); setView('queue'); if (saved.pending) setSelected(saved.pending); }
+      setCollapsed(localStorage.getItem(SIDEBAR_STORAGE) === '1');
+    }
     catch { setStorageError(true); }
     setReady(true);
   }, []);
   useEffect(() => { if (ready && session) { try { localStorage.setItem(STORAGE, JSON.stringify(session)); } catch { setStorageError(true); } } }, [session, ready]);
+  useEffect(() => { if (!ready) return; try { localStorage.setItem(SIDEBAR_STORAGE, collapsed ? '1' : '0'); } catch { /* ignore */ } }, [collapsed, ready]);
   useEffect(() => { if (!notice) return; const timer = setTimeout(() => setNotice(''), 4500); return () => clearTimeout(timer); }, [notice]);
   useEffect(() => {
     const returned = () => { if (session?.pending) { setSelected(session.pending); setNotice('Back from LinkedIn? Confirm the connection status, then save your prospect.'); } };
@@ -103,17 +110,44 @@ export default function Hunter() {
   }
   function navigate(next: View) { setView(next); setError(''); setQuery(''); setSource('all'); }
   if (!ready) return <div className="boot-screen"><Crosshair size={30} /><p>Opening your workspace…</p></div>;
-  return <div className="app-shell">
-    <aside className="sidebar">
-      <a className="brand" href="/" aria-label="Signal Hunter home"><span className="brand-mark"><Crosshair size={24} /></span><span>SIGNAL<span className="brand-light">HUNTER</span><small>FIND THE INTENT.</small></span></a>
-      <div className="workspace-label">WORKSPACE <span>01</span></div>
-      <button className="company-switch" onClick={() => navigate(data ? 'brain' : 'start')}><span className="company-avatar">{data ? companyName.slice(0, 1).toLowerCase() + '.' : '+'}</span><span>{companyName}<small>{data ? 'Company brain ready' : 'Start with your website'}</small></span><ChevronRight size={15} /></button>
+  return <div className={'app-shell' + (collapsed ? ' sidebar-collapsed' : '')}>
+    <aside className={'sidebar' + (collapsed ? ' is-collapsed' : '')} aria-label="Workspace navigation">
+      <div className="sidebar-top">
+        <a className="brand" href="/" aria-label="Signal Hunter home">
+          <span className="brand-mark"><Crosshair size={22} /></span>
+          <span className="brand-copy">
+            <span className="brand-name">SIGNAL<span className="brand-light">HUNTER</span></span>
+            <small>FIND THE INTENT.</small>
+          </span>
+        </a>
+        <button type="button" className="sidebar-toggle" aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} aria-expanded={!collapsed} title={collapsed ? 'Expand' : 'Collapse'} onClick={() => setCollapsed(c => !c)}>
+          {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+        </button>
+      </div>
+      <div className="workspace-label"><span>WORKSPACE</span><span>01</span></div>
+      <button className="company-switch" onClick={() => navigate(data ? 'brain' : 'start')} title={companyName}>
+        <span className="company-avatar">{data ? companyName.slice(0, 1).toLowerCase() + '.' : '+'}</span>
+        <span className="company-copy">{companyName}<small>{data ? 'Company brain ready' : 'Start with your website'}</small></span>
+        <ChevronRight size={15} className="company-chevron" />
+      </button>
       <div className="nav-caption">YOUR WORKFLOW</div>
-      <nav><button className={'nav-item ' + (view === 'start' ? 'active' : '')} onClick={() => navigate('start')}><Globe size={18} />Company website</button><button className={'nav-item ' + (view === 'brain' ? 'active' : '')} disabled={!data} onClick={() => navigate('brain')}><BrainCircuit size={18} />Company brain</button><button className={'nav-item ' + (view === 'queue' ? 'active' : '')} disabled={!data} onClick={() => navigate('queue')}><Radar size={18} />Buying signals<span>{counts.hot}</span></button><button className={'nav-item ' + (view === 'prospects' ? 'active' : '')} disabled={!data} onClick={() => navigate('prospects')}><UserPlus size={18} />My prospects<span>{savedCount}</span></button></nav>
-      {data && <div className="source-status"><div className="nav-caption">DATA IN THIS WORKSPACE</div>{['linkedin', 'reddit', 'hackernews'].map(s => <div key={s}><i className={leads.some(l => l.source === s) ? 'dot green' : 'dot'} /><span>{s === 'hackernews' ? 'Hacker News' : s === 'linkedin' ? 'LinkedIn' : 'Reddit'}</span><small>{leads.filter(l => l.source === s).length} posts</small></div>)}</div>}
-      <div className="sidebar-bottom"><div className="review-note"><CircleHelp size={17} /><span>Built for a human touch.<small>You review. You connect.</small></span></div><button className="operator" disabled={!data} onClick={() => setSettings(true)}><span className="avatar">{workspace.operator.trim().slice(0, 2).toUpperCase() || 'YOU'}</span><span>{workspace.operator || 'Your workspace'}<small>Saved on this device</small></span><Settings2 size={16} /></button></div>
+      <nav>
+        <button className={'nav-item ' + (view === 'start' ? 'active' : '')} onClick={() => navigate('start')} title="Company website"><Globe size={18} /><span className="nav-label">Company website</span></button>
+        <button className={'nav-item ' + (view === 'brain' ? 'active' : '')} disabled={!data} onClick={() => navigate('brain')} title="Company brain"><BrainCircuit size={18} /><span className="nav-label">Company brain</span></button>
+        <button className={'nav-item ' + (view === 'queue' ? 'active' : '')} disabled={!data} onClick={() => navigate('queue')} title="Buying signals"><Radar size={18} /><span className="nav-label">Buying signals</span><span className="nav-count">{counts.hot}</span></button>
+        <button className={'nav-item ' + (view === 'prospects' ? 'active' : '')} disabled={!data} onClick={() => navigate('prospects')} title="My prospects"><UserPlus size={18} /><span className="nav-label">My prospects</span><span className="nav-count">{savedCount}</span></button>
+      </nav>
+      {data && <div className="source-status"><div className="nav-caption">DATA IN THIS WORKSPACE</div>{['linkedin', 'reddit', 'hackernews'].map(s => <div className="source-row" key={s} title={(s === 'hackernews' ? 'Hacker News' : s === 'linkedin' ? 'LinkedIn' : 'Reddit') + ` · ${leads.filter(l => l.source === s).length}`}><i className={leads.some(l => l.source === s) ? 'dot green' : 'dot'} /><span className="source-name">{s === 'hackernews' ? 'Hacker News' : s === 'linkedin' ? 'LinkedIn' : 'Reddit'}</span><small>{leads.filter(l => l.source === s).length}</small></div>)}</div>}
+      <div className="sidebar-bottom">
+        <div className="review-note" title="You review. You connect."><CircleHelp size={17} /><span>Built for a human touch.<small>You review. You connect.</small></span></div>
+        <button className="operator" disabled={!data} onClick={() => setSettings(true)} title="Workspace settings">
+          <span className="avatar">{workspace.operator.trim().slice(0, 2).toUpperCase() || 'YOU'}</span>
+          <span className="operator-copy">{workspace.operator || 'Your workspace'}<small>Saved on this device</small></span>
+          <Settings2 size={16} className="operator-gear" />
+        </button>
+      </div>
     </aside>
-    <div className="main-shell"><header className="topbar"><div><span className="breadcrumb">Workspace</span><ChevronRight size={13} /><span>{view === 'start' ? 'Company website' : view === 'brain' ? 'Company brain' : view === 'prospects' ? 'My prospects' : 'Buying signals'}</span></div><span className="review-badge"><i className="dot green" />You review. Nothing auto-sends.</span></header>
+    <div className="main-shell"><header className="topbar"><div><button type="button" className="sidebar-toggle topbar-toggle" aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} onClick={() => setCollapsed(c => !c)}>{collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}</button><span className="breadcrumb">Workspace</span><ChevronRight size={13} /><span>{view === 'start' ? 'Company website' : view === 'brain' ? 'Company brain' : view === 'prospects' ? 'My prospects' : 'Buying signals'}</span></div><span className="review-badge"><i className="dot green" />You review. Nothing auto-sends.</span></header>
       <main className="main-content">
         <div className="journey-steps"><button onClick={() => navigate('start')} className={view === 'start' ? 'current' : ''}><span>{data ? <Check size={12} /> : '01'}</span>Your company</button><ChevronRight size={13} /><button disabled={!data} onClick={() => navigate('queue')} className={view === 'queue' || view === 'brain' ? 'current' : ''}><span>02</span>Find the intent</button><ChevronRight size={13} /><button disabled={!data} onClick={() => navigate('prospects')} className={view === 'prospects' ? 'current' : ''}><span>03</span>Start a conversation</button></div>
         {storageError && <div className="warning">Device storage is unavailable. Export your workspace before closing this page.</div>}
