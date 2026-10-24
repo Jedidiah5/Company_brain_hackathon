@@ -4,14 +4,18 @@ import './globals.css';
 
 const display = Fraunces({
   subsets: ['latin'],
+  weight: ['500', '700'],
   variable: '--font-display',
   display: 'swap',
+  preload: true,
 });
 
 const sans = DM_Sans({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-sans',
   display: 'swap',
+  preload: true,
 });
 
 export const metadata: Metadata = {
