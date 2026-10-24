@@ -110,6 +110,63 @@ export default function Hunter() {
   }
   function navigate(next: View) { setView(next); setError(''); setQuery(''); setSource('all'); }
   if (!ready) return <div className="boot-screen"><Crosshair size={30} /><p>Opening your workspace…</p></div>;
+
+  if (view === 'start' || !data) {
+    return (
+      <div className="onboarding-page">
+        <header className="onboarding-top">
+          <a className="brand" href="/" aria-label="Signal Hunter home">
+            <span className="brand-mark"><Crosshair size={22} /></span>
+            <span className="brand-copy">
+              <span className="brand-name">SIGNAL<span className="brand-light">HUNTER</span></span>
+              <small>FIND THE INTENT.</small>
+            </span>
+          </a>
+          <span className="review-badge"><i className="dot green" />Nothing auto-sends</span>
+        </header>
+        <main className="onboarding-main">
+          {storageError && <div className="warning">Device storage is unavailable. Export your workspace before closing this page.</div>}
+          {error && <div role="alert" className="warning">{error}</div>}
+          <section className="onboarding">
+            <div className="eyebrow">A LITTLE CONTEXT. A MUCH BETTER CONVERSATION.</div>
+            <div className="onboard-icon"><Crosshair size={36} /></div>
+            <h1>Who are you finding<br />buyers for?</h1>
+            <p>Give us your company website. We’ll learn what you sell,<br className="desktop-break" /> then find people describing the problem you solve.</p>
+            <form onSubmit={buildBrain}>
+              <label htmlFor="company-website">YOUR COMPANY WEBSITE</label>
+              <div className="website-input">
+                <Globe size={19} />
+                <input autoFocus id="company-website" inputMode="url" autoComplete="url" required maxLength={500} value={website} onChange={e => setWebsite(e.target.value)} disabled={!!busy} placeholder="https://jumpstart-uk.com" />
+              </div>
+              <button className="primary-button" disabled={!!busy} type="submit">
+                {busy === 'company' ? <RefreshCw className="spin" size={16} /> : <BrainCircuit size={16} />}
+                {busy === 'company' ? 'Reading website & building your brain…' : 'Build my company brain'}
+                {!busy && <ArrowRight size={16} />}
+              </button>
+            </form>
+            <div className="onboarding-points">
+              <span><Check size={13} />Your ideal customer</span>
+              <span><Check size={13} />Their buying signals</span>
+              <span><Check size={13} />A reply worth sending</span>
+            </div>
+            <div className="onboarding-footer">
+              {data ? (
+                <button className="text-button" onClick={() => navigate('queue')}><ArrowLeft size={13} />Back to your workspace</button>
+              ) : (
+                <button className="text-button" disabled={!!busy} onClick={() => void openPrevious()}>
+                  {busy === 'previous' ? 'Opening…' : 'Open the previous run instead'}
+                  <ArrowUpRight size={13} />
+                </button>
+              )}
+              <small>Nothing is posted or sent automatically.</small>
+            </div>
+          </section>
+        </main>
+        {notice && <div className="toast" role="status">{notice}</div>}
+      </div>
+    );
+  }
+
   return <div className={'app-shell' + (collapsed ? ' sidebar-collapsed' : '')}>
     <aside className={'sidebar' + (collapsed ? ' is-collapsed' : '')} aria-label="Workspace navigation">
       <div className="sidebar-top">
@@ -125,34 +182,34 @@ export default function Hunter() {
         </button>
       </div>
       <div className="workspace-label"><span>WORKSPACE</span><span>01</span></div>
-      <button className="company-switch" onClick={() => navigate(data ? 'brain' : 'start')} title={companyName}>
-        <span className="company-avatar">{data ? companyName.slice(0, 1).toLowerCase() + '.' : '+'}</span>
-        <span className="company-copy">{companyName}<small>{data ? 'Company brain ready' : 'Start with your website'}</small></span>
+      <button className="company-switch" onClick={() => navigate('brain')} title={companyName}>
+        <span className="company-avatar">{companyName.slice(0, 1).toLowerCase() + '.'}</span>
+        <span className="company-copy">{companyName}<small>Company brain ready</small></span>
         <ChevronRight size={15} className="company-chevron" />
       </button>
       <div className="nav-caption">YOUR WORKFLOW</div>
       <nav>
-        <button className={'nav-item ' + (view === 'start' ? 'active' : '')} onClick={() => navigate('start')} title="Company website"><Globe size={18} /><span className="nav-label">Company website</span></button>
-        <button className={'nav-item ' + (view === 'brain' ? 'active' : '')} disabled={!data} onClick={() => navigate('brain')} title="Company brain"><BrainCircuit size={18} /><span className="nav-label">Company brain</span></button>
-        <button className={'nav-item ' + (view === 'queue' ? 'active' : '')} disabled={!data} onClick={() => navigate('queue')} title="Buying signals"><Radar size={18} /><span className="nav-label">Buying signals</span><span className="nav-count">{counts.hot}</span></button>
-        <button className={'nav-item ' + (view === 'prospects' ? 'active' : '')} disabled={!data} onClick={() => navigate('prospects')} title="My prospects"><UserPlus size={18} /><span className="nav-label">My prospects</span><span className="nav-count">{savedCount}</span></button>
+        <button className="nav-item" onClick={() => navigate('start')} title="Company website"><Globe size={18} /><span className="nav-label">Company website</span></button>
+        <button className={'nav-item ' + (view === 'brain' ? 'active' : '')} onClick={() => navigate('brain')} title="Company brain"><BrainCircuit size={18} /><span className="nav-label">Company brain</span></button>
+        <button className={'nav-item ' + (view === 'queue' ? 'active' : '')} onClick={() => navigate('queue')} title="Buying signals"><Radar size={18} /><span className="nav-label">Buying signals</span><span className="nav-count">{counts.hot}</span></button>
+        <button className={'nav-item ' + (view === 'prospects' ? 'active' : '')} onClick={() => navigate('prospects')} title="My prospects"><UserPlus size={18} /><span className="nav-label">My prospects</span><span className="nav-count">{savedCount}</span></button>
       </nav>
-      {data && <div className="source-status"><div className="nav-caption">DATA IN THIS WORKSPACE</div>{['linkedin', 'reddit', 'hackernews'].map(s => <div className="source-row" key={s} title={(s === 'hackernews' ? 'Hacker News' : s === 'linkedin' ? 'LinkedIn' : 'Reddit') + ` · ${leads.filter(l => l.source === s).length}`}><i className={leads.some(l => l.source === s) ? 'dot green' : 'dot'} /><span className="source-name">{s === 'hackernews' ? 'Hacker News' : s === 'linkedin' ? 'LinkedIn' : 'Reddit'}</span><small>{leads.filter(l => l.source === s).length}</small></div>)}</div>}
+      <div className="source-status"><div className="nav-caption">DATA IN THIS WORKSPACE</div>{['linkedin', 'reddit', 'hackernews'].map(s => <div className="source-row" key={s} title={(s === 'hackernews' ? 'Hacker News' : s === 'linkedin' ? 'LinkedIn' : 'Reddit') + ` · ${leads.filter(l => l.source === s).length}`}><i className={leads.some(l => l.source === s) ? 'dot green' : 'dot'} /><span className="source-name">{s === 'hackernews' ? 'Hacker News' : s === 'linkedin' ? 'LinkedIn' : 'Reddit'}</span><small>{leads.filter(l => l.source === s).length}</small></div>)}</div>
       <div className="sidebar-bottom">
         <div className="review-note" title="You review. You connect."><CircleHelp size={17} /><span>Built for a human touch.<small>You review. You connect.</small></span></div>
-        <button className="operator" disabled={!data} onClick={() => setSettings(true)} title="Workspace settings">
+        <button className="operator" onClick={() => setSettings(true)} title="Workspace settings">
           <span className="avatar">{workspace.operator.trim().slice(0, 2).toUpperCase() || 'YOU'}</span>
           <span className="operator-copy">{workspace.operator || 'Your workspace'}<small>Saved on this device</small></span>
           <Settings2 size={16} className="operator-gear" />
         </button>
       </div>
     </aside>
-    <div className="main-shell"><header className="topbar"><div><button type="button" className="sidebar-toggle topbar-toggle" aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} onClick={() => setCollapsed(c => !c)}>{collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}</button><span className="breadcrumb">Workspace</span><ChevronRight size={13} /><span>{view === 'start' ? 'Company website' : view === 'brain' ? 'Company brain' : view === 'prospects' ? 'My prospects' : 'Buying signals'}</span></div><span className="review-badge"><i className="dot green" />You review. Nothing auto-sends.</span></header>
+    <div className="main-shell"><header className="topbar"><div><button type="button" className="sidebar-toggle topbar-toggle" aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} onClick={() => setCollapsed(c => !c)}>{collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}</button><span className="breadcrumb">Workspace</span><ChevronRight size={13} /><span>{view === 'brain' ? 'Company brain' : view === 'prospects' ? 'My prospects' : 'Buying signals'}</span></div><span className="review-badge"><i className="dot green" />You review. Nothing auto-sends.</span></header>
       <main className="main-content">
-        <div className="journey-steps"><button onClick={() => navigate('start')} className={view === 'start' ? 'current' : ''}><span>{data ? <Check size={12} /> : '01'}</span>Your company</button><ChevronRight size={13} /><button disabled={!data} onClick={() => navigate('queue')} className={view === 'queue' || view === 'brain' ? 'current' : ''}><span>02</span>Find the intent</button><ChevronRight size={13} /><button disabled={!data} onClick={() => navigate('prospects')} className={view === 'prospects' ? 'current' : ''}><span>03</span>Start a conversation</button></div>
+        <div className="journey-steps"><button onClick={() => navigate('start')}><span><Check size={12} /></span>Your company</button><ChevronRight size={13} /><button onClick={() => navigate('queue')} className={view === 'queue' || view === 'brain' ? 'current' : ''}><span>02</span>Find the intent</button><ChevronRight size={13} /><button onClick={() => navigate('prospects')} className={view === 'prospects' ? 'current' : ''}><span>03</span>Start a conversation</button></div>
         {storageError && <div className="warning">Device storage is unavailable. Export your workspace before closing this page.</div>}
         {error && <div role="alert" className="warning">{error}</div>}
-        {view === 'start' || !data ? <section className="onboarding panel"><div className="eyebrow">A LITTLE CONTEXT. A MUCH BETTER CONVERSATION.</div><div className="onboard-icon"><Crosshair size={36} /></div><h1>Who are you finding<br />buyers for?</h1><p>Give us your company website. We’ll learn what you sell,<br className="desktop-break" /> then find people describing the problem you solve.</p><form onSubmit={buildBrain}><label htmlFor="company-website">YOUR COMPANY WEBSITE</label><div className="website-input"><Globe size={19} /><input autoFocus id="company-website" inputMode="url" autoComplete="url" required maxLength={500} value={website} onChange={e => setWebsite(e.target.value)} disabled={!!busy} placeholder="https://jumpstart-uk.com" /></div><button className="primary-button" disabled={!!busy} type="submit">{busy === 'company' ? <RefreshCw className="spin" size={16} /> : <BrainCircuit size={16} />}{busy === 'company' ? 'Reading website & building your brain…' : 'Build my company brain'}{!busy && <ArrowRight size={16} />}</button></form><div className="onboarding-points"><span><Check size={13} />Your ideal customer</span><span><Check size={13} />Their buying signals</span><span><Check size={13} />A reply worth sending</span></div><div className="onboarding-footer">{data ? <button className="text-button" onClick={() => navigate('queue')}><ArrowLeft size={13} />Back to your workspace</button> : <button className="text-button" disabled={!!busy} onClick={() => void openPrevious()}>{busy === 'previous' ? 'Opening…' : 'Open the previous run instead'}<ArrowUpRight size={13} /></button>}<small>Nothing is posted or sent automatically.</small></div></section> : <>
+        <>
           <div className="page-heading"><div><div className="eyebrow">{companyName.toUpperCase()} / {view === 'brain' ? 'THE COMPANY BRAIN' : view === 'prospects' ? 'YOUR RELATIONSHIPS' : 'PUBLIC BUYING SIGNALS'}</div><h1>{view === 'brain' ? 'Good context changes everything.' : view === 'prospects' ? 'From signal to conversation.' : 'Less noise. More intent.'}</h1><p>{view === 'brain' ? 'We read your website. Here’s what we’ll look for.' : view === 'prospects' ? 'The people you chose to follow up with, all in one place.' : 'Find the people already asking for what you do.'}</p></div>{view === 'brain' ? <button className="primary-button" disabled={!!busy} onClick={() => void findSignals()}>{busy === 'search' ? <RefreshCw className="spin" size={15} /> : <Radar size={15} />}{busy === 'search' ? 'Finding & scoring signals…' : 'Find LinkedIn buying signals'}</button> : <button className="secondary-button" onClick={exportWorkspace}><FileDown size={15} />Export workspace</button>}</div>
           {data.demo && <div className="demo-banner"><span>SAMPLE WORKSPACE</span>Illustrative conversations, not real prospects. Enter a company website to start a live run.</div>}
           {view === 'brain' ? <section className="brain-grid"><article className="panel brain-card"><span className="eyebrow">WHAT YOU DO</span><h2>Meet {companyName}.</h2><p>{data.profile.sells}</p><h3>Who buys from you</h3><p>{data.profile.icp}</p><h3>Your voice</h3><p>{data.profile.tone}</p><a href={safeUrl(data.company_input)} target="_blank" rel="noreferrer">Read company website<ArrowUpRight size={14} /></a></article><article className="panel brain-card"><span className="eyebrow">WHAT WE LISTEN FOR</span><h2>Pain, in their words.</h2><ul>{data.profile.pains.map((p, i) => <li key={i}>{p}</li>)}</ul><h3>Who we filter out</h3><ul>{data.profile.disqualify.map((p, i) => <li key={i}>{p}</li>)}</ul></article><article className="panel brain-card wide"><span className="eyebrow">SEARCH STRATEGY</span><h2>From your website to their words.</h2><p>We’ll search the first two queries. You can refine the search from the signals inbox.</p><div className="query-tags">{data.queries.map((q, i) => <span key={i}>{q}</span>)}</div>{data.website_source && <details className="website-evidence"><summary>What we read from your website</summary><p>{data.website_source.excerpt}</p><a href={safeUrl(data.website_source.url)} target="_blank" rel="noreferrer">Open the page we read<ExternalLink size={12} /></a><small>Read {new Date(data.website_source.fetched_at).toLocaleString()}</small></details>}<button className="primary-button brain-find" disabled={!!busy} onClick={() => void findSignals()}>{busy === 'search' ? 'Searching LinkedIn & checking buyer fit…' : 'Find LinkedIn buying signals'}<ArrowRight size={15} /></button><p className="field-hint">Up to 20 posts across two searches. Listed search cost up to $0.008, plus AI scoring.</p></article></section> : <>
@@ -161,7 +218,7 @@ export default function Hunter() {
             <section className="queue panel"><div className="queue-title"><div><h2>{view === 'prospects' ? 'My prospects' : 'Your signal inbox'}<span>{view === 'prospects' ? savedCount : counts.kept}</span></h2><p>{view === 'prospects' ? 'Review a prospect, update the connection, plan your next step.' : 'Open a conversation to see the evidence and its source.'}</p></div><div className="search-box"><Search size={15} /><input aria-label="Search leads" placeholder="Search people or signals…" value={query} onChange={e => setQuery(e.target.value)} /></div></div>{view === 'queue' && <div className="queue-toolbar"><div className="tabs">{([{ id: 'all', label: 'All leads', n: counts.kept }, { id: 'actionable', label: 'High intent', n: counts.hot }, { id: 'claimed', label: 'In progress', n: counts.claimed }, { id: 'dropped', label: 'Filtered', n: counts.dropped }] as const).map(t => <button key={t.id} onClick={() => setFilter(t.id)} className={filter === t.id ? 'selected' : ''}>{t.label}<span>{t.n}</span></button>)}</div></div>}<div className="list-controls"><span>{visible.length} {view === 'prospects' ? 'saved prospects' : 'conversations'}</span><div><select aria-label="Source" value={source} onChange={e => setSource(e.target.value)}><option value="all">All sources</option><option value="linkedin">LinkedIn</option><option value="reddit">Reddit</option><option value="hackernews">Hacker News</option></select><select aria-label="Sort leads" value={sort} onChange={e => setSort(e.target.value)}><option value="intent">Highest intent</option><option value="fit">Best fit</option><option value="recent">Most recent</option></select></div></div><div className="table-heading"><span>CONVERSATION / SIGNAL</span><span>INTENT</span><span>FIT</span><span>{view === 'prospects' ? 'CONNECTION' : 'STATUS'}</span><span /></div><div className="lead-list">{visible.map(l => <button className={'lead-row ' + (selected === l.id ? 'row-selected' : '')} key={l.id} onClick={() => setSelected(l.id)}><div className="lead-main"><div className="lead-meta"><span className={'source-icon ' + l.source}>{l.source === 'reddit' ? 'r' : l.source === 'linkedin' ? 'in' : 'Y'}</span><span>{l.author_handle}</span><span>·</span><span>{l.source === 'linkedin' ? 'LinkedIn' : l.context}</span>{actionable(l) && <span className="intent-tag">HIGH INTENT</span>}{session?.prospects[l.id] && <Bookmark size={10} />}</div><h3>{l.title || 'Untitled conversation'}</h3><p>{l.disqualified ? l.disqualified_reason : l.quote || l.reasoning || l.body_excerpt}</p></div><div className={'score ' + (l.scores.intent >= 6 ? 'score-high' : '')}>{l.scores.intent}<small>/10</small></div><div className="fit-score">{l.scores.fit}<small>/10</small></div><span className={'status status-' + (l.disqualified ? 'filtered' : claimFor(l).status)}>{view === 'prospects' ? connectionLabel(session?.connections[l.id] || 'not_sent') : l.disqualified ? 'Filtered' : claimFor(l).status === 'new' ? 'New signal' : claimFor(l).status}</span><ChevronRight size={17} /></button>)}</div>{visible.length === 0 && <div className="empty"><Radar size={28} /><h3>{view === 'prospects' ? 'Your next conversation starts with a signal.' : busy === 'search' ? 'Searching for the right conversations…' : 'No signals in this view yet.'}</h3><p>{view === 'prospects' ? 'Open a qualified signal, connect on LinkedIn, then add the person here.' : leads.length ? 'Try another filter, or refine your search. We keep intent scoring strict.' : 'Click Find LinkedIn buying signals to start your first search.'}</p><button className="text-button" onClick={() => { if (view === 'prospects') navigate('queue'); else { setFilter('all'); setSource('all'); setQuery(''); } }}>{view === 'prospects' ? 'Explore buying signals' : 'Reset filters'}<ArrowRight size={13} /></button></div>}<footer className="queue-footer"><span><i className="dot green" />A human reviews and sends every message.</span><span>Workspace saved on this device</span></footer></section>
           </>}
           <div className="bottom-caption"><span>SIGNAL HUNTER <span className="divider">/</span> BUILT TO FIND THE RIGHT MOMENT</span><span>Powered by context, guided by you<ArrowUpRight size={12} /></span></div>
-        </>}
+        </>
       </main>
     </div>
     {active && session && <div className="drawer-backdrop" onClick={() => setSelected('')}><section className="detail-drawer" role="dialog" aria-modal="true" aria-label="Lead details" onClick={e => e.stopPropagation()}><div className="drawer-heading"><span className="eyebrow">FROM SIGNAL TO CONVERSATION</span><button className="icon-button" aria-label="Close details" autoFocus onClick={() => setSelected('')}><X size={20} /></button></div><div className="lead-meta">{active.context} · {active.author_handle}</div><h2>{active.title}</h2><div className="detail-scores">{(['intent', 'fit', 'urgency'] as const).map(s => <div key={s}><span>{s}</span><strong>{active.scores[s]}<small>/10</small></strong></div>)}</div><div className="step-label"><span>1</span><h3>Read the evidence</h3></div><blockquote>{active.quote || 'No qualifying quote identified.'}</blockquote><p className="reasoning">{active.reasoning}</p>{active.disqualified && <div className="warning">Filtered: {active.disqualified_reason}</div>}<details><summary>Read the source excerpt</summary><p className="excerpt">{active.body_excerpt}</p></details>{safeUrl(active.source_url) && <a className="secondary-button source-button" href={safeUrl(active.source_url)} target="_blank" rel="noreferrer">Open original {active.source === 'linkedin' ? 'LinkedIn post' : 'conversation'}<ExternalLink size={14} /></a>}
