@@ -3,6 +3,7 @@ import { tregCall } from './treg-server.ts';
 import { openaiJson } from './ai-server.ts';
 import { record } from './linkedin.ts';
 import { compactGeneratedQuery, buyerPostQueries } from './search.ts';
+import { isJumpstartSite, jumpstartCommunityLeads, withCommunityLeads } from './jumpstart-seed.ts';
 import type { Dataset } from './types.ts';
 export async function buildCompany(website: string): Promise<Dataset> {
   const url = companyWebsite(website);
@@ -26,5 +27,9 @@ export async function buildCompany(website: string): Promise<Dataset> {
   const dataset = companyContext({ company_input: url, company_name: brain.name, generated_at: new Date().toISOString(), profile: brain, queries: Array.isArray(brain.queries) ? brain.queries.map(compactGeneratedQuery) : brain.queries });
   dataset.queries = buyerPostQueries(dataset.queries, dataset.profile);
   dataset.website_source = { url: sourceUrl, title: typeof sourcePage.title === 'string' ? sourcePage.title : new URL(url).hostname, excerpt: content.slice(0, 1500), fetched_at: new Date().toISOString() };
+  if (isJumpstartSite(url)) {
+    try { return withCommunityLeads(dataset, await jumpstartCommunityLeads()); }
+    catch { /* Sample community fixtures are optional for a live Jumpstart brain. */ }
+  }
   return dataset;
 }

@@ -5,7 +5,9 @@ export function companyWebsite(input: unknown): string {
   try { url = new URL(input.includes('://') ? input.trim() : `https://${input.trim()}`); } catch { throw new Error('Enter a valid company website, such as https://jumpstart-uk.com.'); }
   const host = url.hostname.toLowerCase();
   if (url.protocol !== 'https:' || url.username || url.password || url.port || !/^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/i.test(host) || /(^|\.)(localhost|local|internal|test|invalid)$/.test(host)) throw new Error('Use a public HTTPS company website.');
-  if (host === 'jumpstart.me' || host === 'www.jumpstart.me') throw new Error('Use https://jumpstart-uk.com for Jumpstart.');
+  if (host === 'jumpstart.me' || host === 'www.jumpstart.me' || host === 'jumpstart.co.uk' || host === 'www.jumpstart.co.uk') {
+    throw new Error('Use https://jumpstart-uk.com for Jumpstart.');
+  }
   url.hash = ''; return url.href;
 }
 function sentence(value: unknown, key: string): string {
