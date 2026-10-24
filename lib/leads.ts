@@ -31,3 +31,29 @@ export function mergeLinkedIn(dataset: Dataset, incoming: Lead[], query: string)
     queries: [...new Set([...dataset.queries, query])],
     counts: { fetched: leads.length, kept: leads.length - dropped, dropped }, leads };
 }
+
+/** Merge Reddit fixtures into an existing workspace without clearing other sources. */
+export function mergeReddit(dataset: Dataset, incoming: Lead[]): Dataset {
+  if (!incoming.length) return dataset;
+  const rows = new Map(dataset.leads.map(lead => [lead.id, lead]));
+  for (const lead of incoming) {
+    if (rows.has(lead.id)) continue;
+    rows.set(lead.id, lead);
+  }
+  const leads = [...rows.values()];
+  const dropped = leads.filter(l => l.disqualified).length;
+  return {
+    ...dataset,
+    counts: { fetched: leads.length, kept: leads.length - dropped, dropped },
+    leads,
+  };
+}
+
+export function isJumpstartCompany(dataset: Dataset | null | undefined): boolean {
+  if (!dataset?.company_input) return false;
+  try {
+    return new URL(dataset.company_input).hostname.replace(/^www\./, '').toLowerCase() === 'jumpstart-uk.com';
+  } catch {
+    return false;
+  }
+}

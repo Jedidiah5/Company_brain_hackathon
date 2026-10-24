@@ -2,12 +2,12 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Dataset, Lead } from './types.ts';
 
-/** Pre-scored Reddit + X fixtures baked into the Jumpstart sample workspace. */
+/** Pre-scored Reddit fixtures baked into the Jumpstart sample workspace. */
 export async function jumpstartCommunityLeads(): Promise<Lead[]> {
   const raw = await readFile(path.join(process.cwd(), 'data/example-leads.json'), 'utf8');
   const data = JSON.parse(raw) as Dataset;
   if (!Array.isArray(data.leads)) return [];
-  return data.leads.filter((lead) => lead.source === 'reddit' || lead.source === 'x');
+  return data.leads.filter((lead) => lead.source === 'reddit');
 }
 
 export function withCommunityLeads(dataset: Dataset, community: Lead[]): Dataset {

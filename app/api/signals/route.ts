@@ -1,5 +1,4 @@
 import { loadDataset, scorePosts, searchLinkedIn } from '@/lib/linkedin-server';
-import { loadCommunityPosts } from '@/lib/community';
 import { companyContext } from '@/lib/company';
 import { validateSearchQuery } from '@/lib/search';
 import { sameOrigin } from '@/lib/request';
@@ -9,6 +8,7 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 let busy = false;
 
+/** Live LinkedIn search only. Reddit fixtures are seeded on the Jumpstart workspace without this call. */
 export async function POST(request: Request) {
   if (!sameOrigin(request)) return Response.json({ error: 'Open signal search from this app.' }, { status: 403 });
   if (busy) return Response.json({ error: 'A search is already running. Wait for it to finish.' }, { status: 429 });
@@ -29,61 +29,34 @@ export async function POST(request: Request) {
   }
   busy = true;
   let searchCostUsd = 0;
-  const warnings: string[] = [];
   try {
     const dataset = context || await loadDataset();
     const found = new Map<string, Lead>();
-
-    try {
-      for (const query of queries) {
-        const result = await searchLinkedIn(query);
-        searchCostUsd += result.costUsd || 0;
-        for (const post of result.posts) found.set(post.id, post);
-      }
-    } catch (error) {
-      warnings.push(error instanceof Error ? error.message : 'LinkedIn search failed.');
+    for (const query of queries) {
+      const result = await searchLinkedIn(query);
+      searchCostUsd += result.costUsd || 0;
+      for (const post of result.posts) found.set(post.id, post);
     }
-
-    try {
-      for (const post of await loadCommunityPosts()) found.set(post.id, post);
-    } catch (error) {
-      warnings.push(error instanceof Error ? error.message : 'Could not load Reddit / X fixtures.');
-    }
-
     const posts = [...found.values()];
     if (!posts.length) {
-      return Response.json({
-        error: warnings[0] || 'No posts found across LinkedIn, Reddit, or X.',
-        searchCostUsd,
-        warnings,
-      }, { status: 502 });
+      return Response.json({ error: 'No LinkedIn posts found for these queries.', searchCostUsd }, { status: 502 });
     }
-
     const leads: Lead[] = [];
     for (let i = 0; i < posts.length; i += 10) {
       leads.push(...await scorePosts(posts.slice(i, i + 10), dataset));
     }
-
-    const bySource = {
-      linkedin: leads.filter(l => l.source === 'linkedin').length,
-      reddit: leads.filter(l => l.source === 'reddit').length,
-      x: leads.filter(l => l.source === 'x').length,
-    };
-
     return Response.json({
       leads,
       queries,
       searchCostUsd,
       scored: leads.length,
-      bySource,
-      warnings,
+      bySource: { linkedin: leads.length, reddit: 0 },
       fetchedAt: new Date().toISOString(),
     }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     return Response.json({
-      error: error instanceof Error ? error.message : 'Signal search failed.',
+      error: error instanceof Error ? error.message : 'LinkedIn search failed.',
       searchCostUsd,
-      warnings,
     }, { status: 502 });
   } finally {
     busy = false;

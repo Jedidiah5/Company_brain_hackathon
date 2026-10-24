@@ -61,34 +61,7 @@ export function parseRedditFixture(raw: string, fetchedAt = new Date().toISOStri
   return leads;
 }
 
-export function parseXFixture(raw: string, fetchedAt = new Date().toISOString()): Lead[] {
-  const leads: Lead[] = [];
-  for (const block of blocks(raw)) {
-    const url = field(block, 'url');
-    const text = field(block, 'text');
-    const handle = field(block, 'handle') || 'x_user';
-    if (!url || !text) continue;
-    leads.push(emptyLead({
-      id: idFor('x', url),
-      source: 'x',
-      source_url: url,
-      fetched_at: fetchedAt,
-      posted_at: '',
-      author_handle: handle.replace(/^@/, ''),
-      author_profile_url: handle.startsWith('@') ? `https://x.com/${handle.slice(1)}` : '',
-      context: 'X',
-      title: text.split('\n').find(l => l.trim())?.slice(0, 160) || 'X conversation',
-      body_excerpt: text.slice(0, 600),
-    }));
-  }
-  return leads;
-}
-
 export async function loadCommunityPosts(): Promise<Lead[]> {
-  const root = process.cwd();
-  const [redditRaw, xRaw] = await Promise.all([
-    readFile(path.join(root, 'data/reddit_posts.txt'), 'utf8').catch(() => ''),
-    readFile(path.join(root, 'data/x_posts.txt'), 'utf8').catch(() => ''),
-  ]);
-  return [...parseRedditFixture(redditRaw), ...parseXFixture(xRaw)];
+  const redditRaw = await readFile(path.join(process.cwd(), 'data/reddit_posts.txt'), 'utf8').catch(() => '');
+  return parseRedditFixture(redditRaw);
 }

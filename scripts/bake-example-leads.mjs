@@ -52,30 +52,9 @@ function parseReddit(raw, fetchedAt) {
     })];
   });
 }
-function parseX(raw, fetchedAt) {
-  return blocks(raw).flatMap((block) => {
-    const url = field(block, 'url');
-    const text = field(block, 'text');
-    const handle = field(block, 'handle') || 'x_user';
-    if (!url || !text) return [];
-    return [empty({
-      id: idFor('x', url),
-      source: 'x',
-      source_url: url,
-      fetched_at: fetchedAt,
-      posted_at: fetchedAt,
-      author_handle: handle.replace(/^@/, ''),
-      author_profile_url: handle.startsWith('@') ? `https://x.com/${handle.slice(1)}` : '',
-      context: 'X',
-      title: text.split('\n').find((l) => l.trim())?.slice(0, 160) || 'X conversation',
-      body_excerpt: text.slice(0, 600),
-    })];
-  });
-}
 
 const fetchedAt = '2026-10-24T14:00:00Z';
 const reddit = parseReddit(readFileSync('data/reddit_posts.txt', 'utf8'), fetchedAt);
-const x = parseX(readFileSync('data/x_posts.txt', 'utf8'), fetchedAt);
 const example = JSON.parse(readFileSync('data/example-leads.json', 'utf8'));
 
 const meta = {
@@ -100,27 +79,6 @@ const meta = {
     disqualified: true, disqualified_reason: 'Blue-collar / trades hiring; outside Jumpstart ICP.',
     draft_reply: '',
   },
-  [x[0].id]: {
-    intent: 8, fit: 9, urgency: 7,
-    quote: 'Need our first sales hire in London who can do outbound without a playbook',
-    reasoning: 'Explicit first sales hire in London - core Jumpstart buying signal.',
-    disqualified: false, disqualified_reason: '',
-    draft_reply: 'You mentioned "Need our first sales hire in London who can do outbound without a playbook". Jumpstart places early-career commercial talent into UK startups for exactly this kind of first hire. What timeline are you working to for someone in seat?',
-  },
-  [x[1].id]: {
-    intent: 7, fit: 8, urgency: 7,
-    quote: 'screening 400 applications for one junior ops role',
-    reasoning: 'UK founder drowning in junior ops applications - strong fit for Jumpstart early-career ops placement.',
-    disqualified: false, disqualified_reason: '',
-    draft_reply: 'You mentioned "screening 400 applications for one junior ops role". Jumpstart helps UK startups find early-career ops talent without that screening sink. Are you hiring in London or elsewhere in the UK?',
-  },
-  [x[2].id]: {
-    intent: 5, fit: 6, urgency: 4,
-    quote: 'Looking for agencies that place first marketing hires into UK startups',
-    reasoning: 'Buyer-adjacent but shopping agencies; could be a Jumpstart conversation if they are the hiring company.',
-    disqualified: false, disqualified_reason: '',
-    draft_reply: '',
-  },
 };
 
 function finish(lead, m) {
@@ -138,7 +96,7 @@ function finish(lead, m) {
   };
 }
 
-const community = [...reddit, ...x].map((l) => finish(l, meta[l.id]));
+const community = reddit.map((l) => finish(l, meta[l.id]));
 const keepHn = example.leads.filter((l) => l.source === 'hackernews');
 const leads = [...community, ...keepHn];
 const dropped = leads.filter((l) => l.disqualified).length;
@@ -153,6 +111,5 @@ example.counts = { fetched: leads.length, kept: leads.length - dropped, dropped 
 writeFileSync('data/example-leads.json', JSON.stringify(example, null, 2) + '\n');
 console.log(JSON.stringify({
   total: leads.length,
-  bySource: Object.fromEntries(['reddit', 'x', 'hackernews'].map((s) => [s, leads.filter((l) => l.source === s).length])),
-  titles: leads.map((l) => `${l.source}:${l.scores.intent} ${l.title.slice(0, 48)}`),
+  bySource: Object.fromEntries(['reddit', 'hackernews'].map((s) => [s, leads.filter((l) => l.source === s).length])),
 }, null, 2));

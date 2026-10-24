@@ -1,5 +1,5 @@
 {
-  "demo": true,
+  "demo": false,
   "generated_at": "2026-10-24T14:00:00Z",
   "company_input": "https://jumpstart-uk.com",
   "profile": {
@@ -22,8 +22,8 @@
     "UK startup operations hire"
   ],
   "counts": {
-    "fetched": 8,
-    "kept": 6,
+    "fetched": 5,
+    "kept": 3,
     "dropped": 2
   },
   "leads": [
@@ -104,90 +104,6 @@
       "reasoning": "Hiring channel question for blue-collar roles sits outside Jumpstart early-career commercial ICP.",
       "disqualified": true,
       "disqualified_reason": "Blue-collar / trades hiring; outside Jumpstart ICP.",
-      "draft_reply": "",
-      "claim": {
-        "claimed_by": "",
-        "status": "new",
-        "notes": ""
-      }
-    },
-    {
-      "id": "x_deec779c6bb0",
-      "source": "x",
-      "source_url": "https://x.com/founderinldn/status/1970000000000000001",
-      "fetched_at": "2026-10-24T14:00:00Z",
-      "posted_at": "2026-10-24T14:00:00Z",
-      "author_handle": "founderinldn",
-      "author_profile_url": "https://x.com/founderinldn",
-      "context": "X",
-      "title": "UK seed stage, just closed a small round. Need our first sales hire in London who can do outbound without a playbook. Where are early-career commercial people a",
-      "body_excerpt": "UK seed stage, just closed a small round. Need our first sales hire in London who can do outbound without a playbook. Where are early-career commercial people actually hanging out these days?",
-      "quote": "Need our first sales hire in London who can do outbound without a playbook",
-      "scores": {
-        "intent": 8,
-        "fit": 9,
-        "urgency": 7,
-        "total": 24
-      },
-      "reasoning": "Explicit first sales hire in London - core Jumpstart buying signal.",
-      "disqualified": false,
-      "disqualified_reason": "",
-      "draft_reply": "You mentioned \"Need our first sales hire in London who can do outbound without a playbook\". Jumpstart places early-career commercial talent into UK startups for exactly this kind of first hire. What timeline are you working to for someone in seat?",
-      "claim": {
-        "claimed_by": "",
-        "status": "new",
-        "notes": ""
-      }
-    },
-    {
-      "id": "x_d3fa26da0be0",
-      "source": "x",
-      "source_url": "https://x.com/opsatseriesa/status/1970000000000000002",
-      "fetched_at": "2026-10-24T14:00:00Z",
-      "posted_at": "2026-10-24T14:00:00Z",
-      "author_handle": "opsatseriesa",
-      "author_profile_url": "https://x.com/opsatseriesa",
-      "context": "X",
-      "title": "Founder time sink of the week: screening 400 applications for one junior ops role. Anyone in London found a better path than LinkedIn Easy Apply noise for early",
-      "body_excerpt": "Founder time sink of the week: screening 400 applications for one junior ops role. Anyone in London found a better path than LinkedIn Easy Apply noise for early-career talent?",
-      "quote": "screening 400 applications for one junior ops role",
-      "scores": {
-        "intent": 7,
-        "fit": 8,
-        "urgency": 7,
-        "total": 22
-      },
-      "reasoning": "UK founder drowning in junior ops applications - strong fit for Jumpstart early-career ops placement.",
-      "disqualified": false,
-      "disqualified_reason": "",
-      "draft_reply": "You mentioned \"screening 400 applications for one junior ops role\". Jumpstart helps UK startups find early-career ops talent without that screening sink. Are you hiring in London or elsewhere in the UK?",
-      "claim": {
-        "claimed_by": "",
-        "status": "new",
-        "notes": ""
-      }
-    },
-    {
-      "id": "x_168c0a9e89bf",
-      "source": "x",
-      "source_url": "https://x.com/hirehelpuk/status/1970000000000000003",
-      "fetched_at": "2026-10-24T14:00:00Z",
-      "posted_at": "2026-10-24T14:00:00Z",
-      "author_handle": "hirehelpuk",
-      "author_profile_url": "https://x.com/hirehelpuk",
-      "context": "X",
-      "title": "Looking for agencies that place first marketing hires into UK startups. Not looking for a job myself — we're the company hiring.",
-      "body_excerpt": "Looking for agencies that place first marketing hires into UK startups. Not looking for a job myself — we're the company hiring.",
-      "quote": "Looking for agencies that place first marketing hires into UK startups",
-      "scores": {
-        "intent": 5,
-        "fit": 6,
-        "urgency": 4,
-        "total": 15
-      },
-      "reasoning": "Buyer-adjacent but shopping agencies; could be a Jumpstart conversation if they are the hiring company.",
-      "disqualified": false,
-      "disqualified_reason": "",
       "draft_reply": "",
       "claim": {
         "claimed_by": "",
