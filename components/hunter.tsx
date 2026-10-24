@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import dynamic from 'next/dynamic';
-import { ArrowUpRight, Radar, Layers3, BrainCircuit, Settings2, Search, RefreshCw, ChevronRight, Check, Copy, ExternalLink, X, FileDown, Crosshair, CircleHelp, Globe, UserPlus, ArrowRight, Bookmark, ArrowLeft, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { ArrowUpRight, Radar, BrainCircuit, Settings2, Search, RefreshCw, ChevronRight, Check, Copy, ExternalLink, X, FileDown, Crosshair, CircleHelp, Globe, UserPlus, ArrowRight, Bookmark, ArrowLeft, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { actionable, rank, safeUrl, mergeLinkedIn } from '@/lib/leads';
 import { newSession, readSession, saveProspect, confirmConnection } from '@/lib/session';
 import { statuses, type Claim, type ConnectionStatus, type Dataset, type Lead, type Session, type Workspace } from '@/lib/types';
@@ -12,7 +12,12 @@ const EMPTY_WORKSPACE: Workspace = { claims: {}, drafts: {}, operator: '' };
 type View = 'start' | 'queue' | 'brain' | 'prospects';
 type Filter = 'all' | 'actionable' | 'claimed' | 'dropped';
 const connectionLabel = (status: ConnectionStatus) => status === 'requested' ? 'Request sent' : status === 'connected' ? 'Connected' : 'Not connected yet';
+const emptySubscribe = () => () => {};
+function useHydrated() {
+  return useSyncExternalStore(emptySubscribe, () => true, () => false);
+}
 export default function Hunter() {
+  const hydrated = useHydrated();
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false), [storageError, setStorageError] = useState(false);
   const [view, setView] = useState<View>('start'), [filter, setFilter] = useState<Filter>('all');
@@ -29,14 +34,14 @@ export default function Hunter() {
   const savedCount = Object.keys(session?.prospects || {}).length;
   function setWorkspace(update: (previous: Workspace) => Workspace) { setSession(s => s ? { ...s, workspace: update(s.workspace) } : s); }
   useEffect(() => {
+    if (!hydrated || ready) return;
     try {
       const saved = readSession(localStorage.getItem(STORAGE));
       if (saved) { setSession(saved); setWebsite(saved.dataset.company_input); setView('queue'); if (saved.pending) setSelected(saved.pending); }
       setCollapsed(localStorage.getItem(SIDEBAR_STORAGE) === '1');
-    }
-    catch { setStorageError(true); }
+    } catch { setStorageError(true); }
     setReady(true);
-  }, []);
+  }, [hydrated, ready]);
   useEffect(() => { if (ready && session) { try { localStorage.setItem(STORAGE, JSON.stringify(session)); } catch { setStorageError(true); } } }, [session, ready]);
   useEffect(() => { if (!ready) return; try { localStorage.setItem(SIDEBAR_STORAGE, collapsed ? '1' : '0'); } catch { /* ignore */ } }, [collapsed, ready]);
   useEffect(() => { if (!notice) return; const timer = setTimeout(() => setNotice(''), 4500); return () => clearTimeout(timer); }, [notice]);
