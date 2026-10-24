@@ -1,34 +1,37 @@
 import { loadDataset, scoreLinkedIn, searchLinkedIn } from '@/lib/linkedin-server';
+import { companyContext } from '@/lib/company';
+import { validateSearchQuery } from '@/lib/search';
+import { sameOrigin } from '@/lib/request';
+import type { Dataset, Lead } from '@/lib/types';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 let busy = false;
 export async function POST(request: Request) {
-  const origin = request.headers.get('origin');
-  let sameOrigin = false;
-  try {
-    const parsed = new URL(origin || '');
-    sameOrigin = ['http:', 'https:'].includes(parsed.protocol) && parsed.host === request.headers.get('host');
-  } catch { /* Invalid or missing origin. */ }
-  if (!sameOrigin) return Response.json({ error: 'Open LinkedIn search from this app.' }, { status: 403 });
+  if (!sameOrigin(request)) return Response.json({ error: 'Open LinkedIn search from this app.' }, { status: 403 });
   if (busy) return Response.json({ error: 'A search is already running. Wait for it to finish.' }, { status: 429 });
-  let query: string;
+  let queries: string[], context: Dataset | undefined;
   try {
     const input = await request.json();
-    if (typeof input.query !== 'string' || input.query.trim().length < 3 || input.query.length > 240) throw new Error();
-    query = input.query.trim();
-  } catch { return Response.json({ error: 'Enter a LinkedIn search of 3–240 characters.' }, { status: 400 }); }
-  if (!process.env.OPENAI_API_KEY) return Response.json({ error: 'Add OPENAI_API_KEY to the server environment before searching.' }, { status: 503 });
+    if (input.company) context = companyContext(input.company);
+    const requested = typeof input.query === 'string' ? [input.query] : input.queries;
+    if (!Array.isArray(requested) || !requested.length || requested.length > 2 || requested.some(q => typeof q !== 'string' || q.trim().length < 3 || q.length > 240)) throw new Error('Choose one or two search queries of 3–240 characters.');
+    queries = [...new Set(requested.map(validateSearchQuery))];
+  } catch (error) { return Response.json({ error: error instanceof Error ? error.message : 'Enter a valid search.' }, { status: 400 }); }
+  if (!process.env.OPENAI_API_KEY) return Response.json({ error: 'Connect an OpenAI API key before searching.' }, { status: 503 });
   busy = true;
-  let searchCostUsd: number | null = null;
+  let searchCostUsd = 0;
   try {
-    const dataset = await loadDataset();
-    const result = await searchLinkedIn(query);
-    searchCostUsd = result.costUsd;
-    const leads = await scoreLinkedIn(result.posts, dataset);
-    return Response.json({ leads, query, searchCostUsd, scored: leads.length, fetchedAt: new Date().toISOString() }, { headers: { 'Cache-Control': 'no-store' } });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'LinkedIn search failed.';
-    return Response.json({ error: message, searchCostUsd }, { status: 502 });
-  } finally { busy = false; }
+    const dataset = context || await loadDataset();
+    const found = new Map<string, Lead>();
+    for (const query of queries) {
+      const result = await searchLinkedIn(query);
+      searchCostUsd += result.costUsd || 0;
+      for (const post of result.posts) found.set(post.id, post);
+    }
+    const posts = [...found.values()], leads: Lead[] = [];
+    for (let i = 0; i < posts.length; i += 10) leads.push(...await scoreLinkedIn(posts.slice(i, i + 10), dataset));
+    return Response.json({ leads, queries, searchCostUsd, scored: leads.length, fetchedAt: new Date().toISOString() }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch (error) { return Response.json({ error: error instanceof Error ? error.message : 'LinkedIn search failed.', searchCostUsd }, { status: 502 }); }
+  finally { busy = false; }
 }

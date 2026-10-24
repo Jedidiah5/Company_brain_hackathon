@@ -60,3 +60,11 @@ The inbox now has a **Search LinkedIn** form. It searches public posts from the 
 For local use, run `treg login` and set `OPENAI_API_KEY` in `.env`. No provider key is required. The route runs the signed-in treg CLI without exposing credentials. For Vercel, configure a team-scoped `TREG_TOKEN` and `OPENAI_API_KEY` in server environment settings; a personal treg token also needs `TREG_ORG`. The local CLI login does not transfer to a deployment.
 
 A search is listed at $0.004 through HarvestAPI; the returned actual charge is shown separately from OpenAI scoring. Search failures preserve the current dataset. Results from the UI persist on this device, refresh with the latest file and are included in JSON export. The Python CLI remains the Reddit/HN pipeline.
+
+## Complete demo journey
+
+Start with **Company website → Build my company brain → Find LinkedIn buying signals**. The app reads the submitted website, generates a company-specific profile and searches, and scores posts against that profile. It reviews up to twenty posts from two searches by default; **Refine search** runs one custom query instead.
+
+Open a signal to read its source post, open the author's profile in a new tab, connect manually, then return and confirm the connection status. **Add to my prospects** saves the person with notes and follow-up state. The company workspace, results, drafts and saved prospects survive reload on this device. Connection requests are never sent by the app and connection status is user-confirmed.
+
+See [DEMO.md](DEMO.md) for the exact presentation flow. Fresh browsers start at website onboarding; use **Open the previous run instead** only when presenting a saved run. No synthetic buyer signal is substituted into a live search.

@@ -16,7 +16,7 @@ function linkedinUrl(value: unknown): string {
 }
 export function normalizeLinkedIn(payload: unknown, limit = 10, fetchedAt = new Date().toISOString()): Lead[] {
   const data = record(payload);
-  if (data.error || (typeof data.status === 'number' && data.status >= 400)) throw new Error('LinkedIn provider refused the search. Check your treg account and credit.');
+  if (data.error || (typeof data.status === 'number' && data.status >= 400)) throw new Error(typeof data.error === 'string' ? `LinkedIn search could not run: ${data.error.slice(0, 240)}` : 'LinkedIn provider refused the search. Check your account and try again.');
   if (!Array.isArray(data.elements)) throw new Error('LinkedIn returned an unexpected response. Your previous dataset is unchanged.');
   const seen = new Set<string>();
   const leads: Lead[] = [];

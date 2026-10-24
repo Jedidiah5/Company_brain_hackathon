@@ -60,3 +60,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Current demo journey
+
+The UI starts at website onboarding. `/api/company` reads the homepage and a same-site employer page when available, builds a buyer-oriented company brain and LinkedIn search queries. `/api/linkedin` accepts that validated company context, searches up to two queries and scores up to twenty posts. It does not substitute an older profile.
+
+Opening the source or author profile is manual and uses a new tab. The user confirms connection status; the app neither sends a connection request nor checks whether LinkedIn accepted it. Prospects, connection confirmations, drafts and notes are stored in `signal-hunter.session.v2` on this device. Prospect metadata is separate from the frozen lead contract. See `DEMO.md` for the recording journey.
