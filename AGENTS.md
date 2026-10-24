@@ -29,9 +29,13 @@ than a short one.
    queries against `https://oauth.reddit.com/search`. Put `REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET` in
    `.env`; `.env.example` already lists them. Reddit is where UK founders actually describe this pain, so this
    is the highest value work left.
-2. **Hacker News is a poor fit for this ICP.** Of 200 companies in the October 2026 "Who is hiring?" thread,
-   one mentioned the UK and a commercial role. HN is US and engineering heavy. Keep it as a source, do not
-   expect it to carry the demo.
+2. **Hacker News is live, and weak but real for this ICP.** `/api/signals` searches it through the free
+   `hn.algolia.com` index, with no key and no treg cost. That index takes free text, so a LinkedIn boolean query
+   returns **zero** hits; `hnQueries` in `lib/hackernews.ts` rewrites each one as a single quoted phrase plus one
+   narrowing term. Adding a second narrowing term collapses the result set to almost nothing, so do not "improve"
+   it by adding more. The window is 180 days, against LinkedIn's month. HN is US and engineering heavy and the
+   scorer drops most of it with a reason, so keep it, but do not expect it to carry the demo. Measured on
+   Jumpstart: 20 posts scored, 3 kept, all 3 at intent 7.
 
 ## Rules
 

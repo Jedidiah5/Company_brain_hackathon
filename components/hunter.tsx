@@ -104,7 +104,7 @@ export default function Hunter() {
       const hot = result.leads.filter(actionable).length, kept = result.leads.filter((l: Lead) => !l.disqualified).length;
       const src = result.bySource || {};
       setView('queue'); setSource('all'); setQuery(''); setFilter(hot ? 'actionable' : kept ? 'all' : 'dropped');
-      setResultMessage(`${result.scored} posts reviewed (LinkedIn ${src.linkedin || 0} · Reddit ${src.reddit || 0} · X ${src.x || 0}) · ${hot} ready for a reply · ${result.scored - kept} filtered. ${hot ? 'Open a signal to review the evidence.' : 'No strong buyer signal in this batch. Review the results or try a different query.'}${Array.isArray(result.warnings) && result.warnings.length ? ` Note: ${result.warnings[0]}` : ''}`);
+      setResultMessage(`${result.scored} posts reviewed (LinkedIn ${src.linkedin || 0} · Reddit ${src.reddit || 0} · X ${src.x || 0} · Hacker News ${src.hackernews || 0}) · ${hot} ready for a reply · ${result.scored - kept} filtered. ${hot ? 'Open a signal to review the evidence.' : 'No strong buyer signal in this batch. Review the results or try a different query.'}${Array.isArray(result.warnings) && result.warnings.length ? ` Note: ${result.warnings[0]}` : ''}`);
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not find signals.'); } finally { setBusy(''); }
   }
   function saveLead(lead: Lead) {

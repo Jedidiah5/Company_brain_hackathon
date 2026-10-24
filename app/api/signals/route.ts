@@ -1,5 +1,7 @@
 import { loadDataset, scorePosts, searchLinkedIn } from '@/lib/linkedin-server';
 import { loadCommunityPosts } from '@/lib/community';
+import { searchHackerNews } from '@/lib/hackernews-server';
+import { hnQueries } from '@/lib/hackernews';
 import { companyContext } from '@/lib/company';
 import { validateSearchQuery } from '@/lib/search';
 import { sameOrigin } from '@/lib/request';
@@ -50,10 +52,20 @@ export async function POST(request: Request) {
       warnings.push(error instanceof Error ? error.message : 'Could not load Reddit / X fixtures.');
     }
 
+    // The Hacker News index takes free text, so the LinkedIn boolean queries are rewritten first.
+    try {
+      for (const query of hnQueries(queries)) {
+        const result = await searchHackerNews(query);
+        for (const post of result.posts) found.set(post.id, post);
+      }
+    } catch (error) {
+      warnings.push(error instanceof Error ? error.message : 'Hacker News search failed.');
+    }
+
     const posts = [...found.values()];
     if (!posts.length) {
       return Response.json({
-        error: warnings[0] || 'No posts found across LinkedIn, Reddit, or X.',
+        error: warnings[0] || 'No posts found across LinkedIn, Reddit, X, or Hacker News.',
         searchCostUsd,
         warnings,
       }, { status: 502 });
@@ -68,6 +80,7 @@ export async function POST(request: Request) {
       linkedin: leads.filter(l => l.source === 'linkedin').length,
       reddit: leads.filter(l => l.source === 'reddit').length,
       x: leads.filter(l => l.source === 'x').length,
+      hackernews: leads.filter(l => l.source === 'hackernews').length,
     };
 
     return Response.json({
