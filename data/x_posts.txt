@@ -1,0 +1,15 @@
+handle: @founderinldn
+url: https://x.com/founderinldn/status/1970000000000000001
+text: UK seed stage, just closed a small round. Need our first sales hire in London who can do outbound without a playbook. Where are early-career commercial people actually hanging out these days?
+
+---
+
+handle: @opsatseriesa
+url: https://x.com/opsatseriesa/status/1970000000000000002
+text: Founder time sink of the week: screening 400 applications for one junior ops role. Anyone in London found a better path than LinkedIn Easy Apply noise for early-career talent?
+
+---
+
+handle: @hirehelpuk
+url: https://x.com/hirehelpuk/status/1970000000000000003
+text: Looking for agencies that place first marketing hires into UK startups. Not looking for a job myself — we're the company hiring.

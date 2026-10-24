@@ -1,6 +1,6 @@
 {
   "demo": true,
-  "generated_at": "2026-10-24T12:00:00Z",
+  "generated_at": "2026-10-24T14:00:00Z",
   "company_input": "https://jumpstart-uk.com",
   "profile": {
     "sells": "Jumpstart places early-career sales, marketing, operations and chief-of-staff talent into UK startups.",
@@ -22,33 +22,173 @@
     "UK startup operations hire"
   ],
   "counts": {
-    "fetched": 5,
-    "kept": 3,
+    "fetched": 8,
+    "kept": 6,
     "dropped": 2
   },
   "leads": [
     {
-      "id": "sample_01",
+      "id": "reddit_144e1e7dc0e0",
       "source": "reddit",
-      "source_url": "",
-      "fetched_at": "2026-10-24T12:00:00Z",
-      "posted_at": "2026-10-24T10:00:00Z",
-      "author_handle": "sample_founder",
+      "source_url": "https://www.reddit.com/r/RecruitmentAgencies/comments/1vbocdx/best_candidate_screening_software_for_handling_a/",
+      "fetched_at": "2026-10-24T14:00:00Z",
+      "posted_at": "2026-10-24T14:00:00Z",
+      "author_handle": "reddit",
+      "author_profile_url": "",
+      "context": "r/RecruitmentAgencies",
+      "title": "Best candidate screening software for handling a flood of applicants?",
+      "body_excerpt": "We opened one role and got over a thousands applicants in a few days. Wayy too many to be read by hand and the basic screening questins still left me with hundreds that technically pass. Im looking for candidate screening software that can actually do bulk analysis, parse and rank resume against the role with solid whys and why nots- for people who have dealt with similar volume what candidate screening software actually held up and did it just do keyword matching or actually rank a genuine fit. Need something practical not another ats tool with gpt wrapper",
+      "quote": "Wayy too many to be read by hand and the basic screening questins still left me with hundreds that technically pass",
+      "scores": {
+        "intent": 6,
+        "fit": 7,
+        "urgency": 8,
+        "total": 21
+      },
+      "reasoning": "High-volume screening pain matches Jumpstart buyers who lack a recruiting team, though they asked for software not talent.",
+      "disqualified": false,
+      "disqualified_reason": "",
+      "draft_reply": "You mentioned \"Wayy too many to be read by hand and the basic screening questins still left me with hundreds that technically pass\". Jumpstart helps UK startups find early-career commercial people without drowning founders in applications. Is this hire for a UK commercial or ops role?",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "reddit_7e355353735b",
+      "source": "reddit",
+      "source_url": "https://www.reddit.com/r/startups/comments/1n92qk9/how_do_i_hire_the_best_first_hires_for_my_startup/",
+      "fetched_at": "2026-10-24T14:00:00Z",
+      "posted_at": "2026-10-24T14:00:00Z",
+      "author_handle": "reddit",
       "author_profile_url": "",
       "context": "r/startups",
-      "title": "How do you hire your first sales person?",
-      "quote": "We need our first sales hire in London this quarter, but I have no idea where to find junior talent.",
-      "body_excerpt": "We need our first sales hire in London this quarter, but I have no idea where to find junior talent.",
+      "title": "How do I hire the best first hires for my startup?",
+      "body_excerpt": "I'm a solo-founder with a bootstrapped post-revenue startup. I've built the full product, marketed it, and generated revenue myself.\nOur main stack includes: typescript, NextJS, React, Tailwind over Vercel. While the product is already mature, I would like to hire some developers to take the development burden off me so I can concentrate more on getting clients and increasing our revenue. Hiring for startups is new to me, so I had some questions (maybe newbish, but pls help a fellow redditor):\nWhat should I look for in an ideal candidate? I don't want someone to just work for the paycheck. Of ",
+      "quote": "I would like to hire some developers to take the development burden off me so I can concentrate more on getting clients",
+      "scores": {
+        "intent": 7,
+        "fit": 8,
+        "urgency": 6,
+        "total": 21
+      },
+      "reasoning": "Solo founder planning first hires and shifting time to revenue - close to Jumpstart ICP, though the role skews engineering.",
+      "disqualified": false,
+      "disqualified_reason": "",
+      "draft_reply": "You mentioned \"I would like to hire some developers to take the development burden off me so I can concentrate more on getting clients\". Jumpstart helps UK startups place early-career commercial talent so founders can stay on growth. Are you also planning a first sales or ops hire alongside engineering?",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "reddit_aa6e8e910736",
+      "source": "reddit",
+      "source_url": "https://www.reddit.com/r/Recruitment/comments/1wv2svb/alternatives-to-indeed/",
+      "fetched_at": "2026-10-24T14:00:00Z",
+      "posted_at": "2026-10-24T14:00:00Z",
+      "author_handle": "reddit",
+      "author_profile_url": "",
+      "context": "r/Recruitment",
+      "title": "Alternatives to Indeed",
+      "body_excerpt": "Hello! What have you found are reliable alternatives to Indeed, especially for blue collar, trades, etc.",
+      "quote": "especially for blue collar, trades, etc.",
+      "scores": {
+        "intent": 2,
+        "fit": 2,
+        "urgency": 3,
+        "total": 7
+      },
+      "reasoning": "Hiring channel question for blue-collar roles sits outside Jumpstart early-career commercial ICP.",
+      "disqualified": true,
+      "disqualified_reason": "Blue-collar / trades hiring; outside Jumpstart ICP.",
+      "draft_reply": "",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "x_deec779c6bb0",
+      "source": "x",
+      "source_url": "https://x.com/founderinldn/status/1970000000000000001",
+      "fetched_at": "2026-10-24T14:00:00Z",
+      "posted_at": "2026-10-24T14:00:00Z",
+      "author_handle": "founderinldn",
+      "author_profile_url": "https://x.com/founderinldn",
+      "context": "X",
+      "title": "UK seed stage, just closed a small round. Need our first sales hire in London who can do outbound without a playbook. Where are early-career commercial people a",
+      "body_excerpt": "UK seed stage, just closed a small round. Need our first sales hire in London who can do outbound without a playbook. Where are early-career commercial people actually hanging out these days?",
+      "quote": "Need our first sales hire in London who can do outbound without a playbook",
       "scores": {
         "intent": 8,
         "fit": 9,
-        "urgency": 8,
-        "total": 25
+        "urgency": 7,
+        "total": 24
       },
-      "reasoning": "Illustrative score for UI demonstration; this is not a real prospect.",
+      "reasoning": "Explicit first sales hire in London - core Jumpstart buying signal.",
       "disqualified": false,
       "disqualified_reason": "",
-      "draft_reply": "You mentioned \"We need our first sales hire in London this quarter, but I have no idea where to find junior talent.\" Jumpstart helps UK startups find early-career commercial talent. What would a successful first three months look like for this hire?",
+      "draft_reply": "You mentioned \"Need our first sales hire in London who can do outbound without a playbook\". Jumpstart places early-career commercial talent into UK startups for exactly this kind of first hire. What timeline are you working to for someone in seat?",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "x_d3fa26da0be0",
+      "source": "x",
+      "source_url": "https://x.com/opsatseriesa/status/1970000000000000002",
+      "fetched_at": "2026-10-24T14:00:00Z",
+      "posted_at": "2026-10-24T14:00:00Z",
+      "author_handle": "opsatseriesa",
+      "author_profile_url": "https://x.com/opsatseriesa",
+      "context": "X",
+      "title": "Founder time sink of the week: screening 400 applications for one junior ops role. Anyone in London found a better path than LinkedIn Easy Apply noise for early",
+      "body_excerpt": "Founder time sink of the week: screening 400 applications for one junior ops role. Anyone in London found a better path than LinkedIn Easy Apply noise for early-career talent?",
+      "quote": "screening 400 applications for one junior ops role",
+      "scores": {
+        "intent": 7,
+        "fit": 8,
+        "urgency": 7,
+        "total": 22
+      },
+      "reasoning": "UK founder drowning in junior ops applications - strong fit for Jumpstart early-career ops placement.",
+      "disqualified": false,
+      "disqualified_reason": "",
+      "draft_reply": "You mentioned \"screening 400 applications for one junior ops role\". Jumpstart helps UK startups find early-career ops talent without that screening sink. Are you hiring in London or elsewhere in the UK?",
+      "claim": {
+        "claimed_by": "",
+        "status": "new",
+        "notes": ""
+      }
+    },
+    {
+      "id": "x_168c0a9e89bf",
+      "source": "x",
+      "source_url": "https://x.com/hirehelpuk/status/1970000000000000003",
+      "fetched_at": "2026-10-24T14:00:00Z",
+      "posted_at": "2026-10-24T14:00:00Z",
+      "author_handle": "hirehelpuk",
+      "author_profile_url": "https://x.com/hirehelpuk",
+      "context": "X",
+      "title": "Looking for agencies that place first marketing hires into UK startups. Not looking for a job myself — we're the company hiring.",
+      "body_excerpt": "Looking for agencies that place first marketing hires into UK startups. Not looking for a job myself — we're the company hiring.",
+      "quote": "Looking for agencies that place first marketing hires into UK startups",
+      "scores": {
+        "intent": 5,
+        "fit": 6,
+        "urgency": 4,
+        "total": 15
+      },
+      "reasoning": "Buyer-adjacent but shopping agencies; could be a Jumpstart conversation if they are the hiring company.",
+      "disqualified": false,
+      "disqualified_reason": "",
+      "draft_reply": "",
       "claim": {
         "claimed_by": "",
         "status": "new",
@@ -84,62 +224,6 @@
       }
     },
     {
-      "id": "sample_03",
-      "source": "reddit",
-      "source_url": "",
-      "fetched_at": "2026-10-24T12:00:00Z",
-      "posted_at": "2026-10-24T10:00:00Z",
-      "author_handle": "sample_founder",
-      "author_profile_url": "",
-      "context": "r/Entrepreneur",
-      "title": "Founder spending too long screening applications",
-      "quote": "I spend every Friday reading applications for our UK operations role instead of talking to customers.",
-      "body_excerpt": "I spend every Friday reading applications for our UK operations role instead of talking to customers.",
-      "scores": {
-        "intent": 6,
-        "fit": 8,
-        "urgency": 7,
-        "total": 21
-      },
-      "reasoning": "Illustrative score for UI demonstration; this is not a real prospect.",
-      "disqualified": false,
-      "disqualified_reason": "",
-      "draft_reply": "You mentioned \"I spend every Friday reading applications for our UK operations role instead of talking to customers.\" Jumpstart helps UK startups find early-career commercial talent. What would a successful first three months look like for this hire?",
-      "claim": {
-        "claimed_by": "",
-        "status": "new",
-        "notes": ""
-      }
-    },
-    {
-      "id": "sample_04",
-      "source": "reddit",
-      "source_url": "",
-      "fetched_at": "2026-10-24T12:00:00Z",
-      "posted_at": "2026-10-24T10:00:00Z",
-      "author_handle": "sample_account",
-      "author_profile_url": "",
-      "context": "r/jobs",
-      "title": "Looking for my first marketing job",
-      "quote": "I am looking for a junior marketing job in London.",
-      "body_excerpt": "I am looking for a junior marketing job in London.",
-      "scores": {
-        "intent": 3,
-        "fit": 2,
-        "urgency": 6,
-        "total": 11
-      },
-      "reasoning": "Illustrative score for UI demonstration; this is not a real prospect.",
-      "disqualified": true,
-      "disqualified_reason": "Job seeker; not a buyer.",
-      "draft_reply": "",
-      "claim": {
-        "claimed_by": "",
-        "status": "new",
-        "notes": ""
-      }
-    },
-    {
       "id": "sample_05",
       "source": "hackernews",
       "source_url": "",
@@ -167,5 +251,6 @@
         "notes": ""
       }
     }
-  ]
+  ],
+  "company_name": "Jumpstart"
 }
